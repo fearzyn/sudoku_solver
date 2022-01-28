@@ -3,6 +3,7 @@ import pygame
 pygame.font.init()
 x = 720
 y = 720
+section = 720 / 9 # 80
 size = (x, y)
 screen = pygame.display.set_mode(size)
 black = (0, 0, 0)
@@ -28,13 +29,37 @@ board = [
     ]
 
 
- 
- 
+ # drawing functions 
+ #draw_selected_box
+
+
+#draw board
+def draw_board():
+    pygame.draw.lines(screen, black, False, [(0,0), (x,0), (x,y), (0, y), (0,0)], 20)
+    i = 1
+    while (i * 80) < 720:
+        # Thicker lines on 3x3 borders
+        line_width = 5 if i % 3 > 0 else 10
+        # Column lines 
+        pygame.draw.lines(screen, black, False, [((i * section), 0), ((i * section), y)], line_width) # first loop: (95, 15) -> (95, 735) then (175, 15) -> (175, 735)
+        # Row lines
+        pygame.draw.lines(screen, black, False, [(x, (i * section)), (0, (i * section))], line_width)
+        i += 1
+    pygame.display.update()
+
+# solver
+#valid
+
+#solve
 
 
 
+
+# main
 running = True
 while running:
   for event in pygame.event.get():
     if event.type == pygame.QUIT:
       running = False
+
+    draw_board()
