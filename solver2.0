@@ -1,4 +1,6 @@
 import sys, pygame
+import time
+
 
 
 # Sudoku helper function
@@ -18,14 +20,12 @@ def valid(board, row, col, number):
             if board[corner_row + x][corner_col + y] == number:
                 return False
     # If number passes, then it must be a valid number to place
-    pygame.display.update()
 
     return True
 
 # Sudoku solver uysing backtracking and recursion
 
 def solve(board, row, col):
-
     # if column is the last position
     if col == 9:
         # if row is the last row of the board then it is solved (since it is at the last column as well)
@@ -43,7 +43,6 @@ def solve(board, row, col):
             board[row][col] = num 
             if solve(board, row, col +1):
                 draw_solved(num, row, col)
-                pygame.display.update()
                 return True
             else:
                 
@@ -79,16 +78,19 @@ def draw_numbers(board):
 
 def draw_solved(num, row, col):
     offset = 32
-    draw = my_font.render(str(num), 1, black)
+    draw = my_font.render(str(num), True, black)
     screen.blit(draw, ((col * 80) + offset, (row * 80) + offset - 10))
-    #pygame.display.update()
-    #pygame.time.delay(100)
+   
+
+
+
+
 
 
 pygame.font.init()
 x = 720
 y = 720
-size = (x, y)
+size = (720, 800)
 screen = pygame.display.set_mode(size)
 black = (0, 0, 0)
 red = (255,0,0)
@@ -113,32 +115,72 @@ board = [
         [1, 2, 0, 0, 0, 7, 4, 0, 0],
         [0, 4, 9, 2, 0, 6, 0, 0, 7]
     ]
+'''
 
-
+board = [
+        [0, 0, 0, 0, 0, 0, 1, 7, 4],
+        [0, 2, 0, 0, 0, 0, 8, 0, 0],
+        [9, 8, 0, 0, 0, 0, 5, 0, 0],
+        [0, 6, 3, 9, 0, 0, 0, 0, 0],
+        [0, 0, 0, 5, 0, 0, 0, 4, 0],
+        [0, 0, 0, 0, 0, 8, 0, 0, 3],
+        [1, 0, 0, 0, 4, 0, 0, 0, 5],
+        [7, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 8, 0, 1, 7, 0, 0, 0]
+    ]
+'''
+# Main
 running = True
 while running:
   for event in pygame.event.get():
     if event.type == pygame.QUIT:
       running = False
-    
 
+    # Starting setup
     draw_board()
     draw_numbers(board)
+    drawTime = my_font.render("Time: ", True, black)
+    screen.blit(drawTime, (0, 730))
 
     pygame.display.update() 
 
     if event.type == pygame.KEYDOWN:
         if event.key == pygame.K_RETURN:
+
+            start = time.time()
+            solve(board, 0, 0)
+            end = time.time()
+            the_time = end - start
+            print(the_time)
+            draw_time = my_font.render(str(the_time), True, black)
+            screen.blit(draw_time, (80, 730) )
+
+            if not solve(board, 0, 0):
+                screen.fill(red)
+                error = my_font.render("No solution", True, black)
+                screen.blit(error, (x//2 -78, 730) )
+                pygame.display.update()
+
+
+            '''
             if solve(board,0,0):
                 draw_solved
+
+                
+
+
+                start = time.time()
                 solve(board,0,0)
+
+                print(time.time() - start)
+
                 pygame.display.update() 
             else:
                 screen.fill(red)
                 error = my_font.render("No solution", True, black)
                 screen.blit(error, (x//2 -78, y//2) )
                 pygame.display.update()
-
+            '''
 
 
 
