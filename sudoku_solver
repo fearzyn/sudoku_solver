@@ -95,7 +95,7 @@ def valid(board, row, col, number):
 
 #solve
 def solve(board, row, col):
-     
+    
     while board[row][col] != 0:
         if row < 8:
             row += 1
