@@ -1,6 +1,8 @@
 # autosudoku
 A program that automates the solving of web-based sudoku puzzles.
 
+![autosudoku](https://github.com/ramirezfernando/autosudoku/assets/91701930/f937788e-a104-4b05-b62e-5d4c111f2006)
+
 ## Installation
 1. Clone the repository.
 ```bash
