@@ -1,75 +1,95 @@
 import pyautogui as pg
-import time
 
-board = []
-for num in range(1,10):
-    theInput = input("Enter row {}: ".format(num))
-    tempList = []
-    for num in theInput:
-        tempList.append(int(num))
-    board.append(tempList)
+type IntMatrix = list[list[int]]
+type StrMatrix = list[list[str]]
 
-time.sleep(2)
+class Solver:
+    def __init__(self, board: IntMatrix) -> None:
+        """Solves online Sudoku puzzles.
 
+        Args:
+            board (list[list[int]]): The Sudoku puzzle board.
+        Returns:
+            None
+        """
+        self.board = board
 
+    def isValid(self, row: int, col: int, number: int) -> bool:
+        """Checks if a given number can be placed on the board while following Sudoku rules.
 
-# Sudoku helper function
-def valid(row, col, number):
-    for i in range(9):
-        # Check row
-        if board[row][i] == number:
-            return False
-        # Check column
-        if board[i][col] == number:
-            return False
-    # Check 3x3 boxes
-    corner_row = row - row % 3
-    corner_col = col - col % 3
-    for x in range(3):
-        for y in range(3):
-            if board[corner_row + x][corner_col + y] == number:
+        Args:
+            row (int): The row index on the board.
+            col (int): The column index on the board.
+            number (int): The number to be placed on the board.
+        Returns:
+            bool
+        """
+        for i in range(9):
+            if self.board[row][i] == number:
                 return False
-    # If number passes, then it must be a valid number to place
-    return True
+            if self.board[i][col] == number:
+                return False
+            
+        cornerRow = row - row % 3
+        cornerCol = col - col % 3
+        for x in range(3):
+            for y in range(3):
+                if self.board[cornerRow + x][cornerCol + y] == number:
+                    return False
+        return True
+    
+    def solve(self) -> None:
+        """Solves the Sudoku puzzle.
 
+        Args:
+            None
+        Returns:
+            None
+        """
+        for row in range(9):
+            for col in range(9):
+                if self.board[row][col] == 0:
+                    for num in range(1, 10):
+                        if self.isValid(row, col, num):
+                            self.board[row][col] = num
+                            self.solve()
+                            self.board[row][col] = 0
+                    return
+        self.automate()
 
-def Print(board):
-    # Turns int board to string board
-    final = []
-    str_fin = []
-    for i in range(9):
-        final.append(board[i])
+    def flatten(self, board: IntMatrix) -> StrMatrix:
+        """Converts a matrix with integer values to a matrix with string values.
 
-    for lists in final:
-        for num in lists:
-            str_fin.append(str(num))
+        Args:
+            board (list[list[int]]): The Sudoku puzzle board.
+        Returns:
+            list[list[str]]
+        """
+        flatBoard = []
+        for row in board:
+            flatBoard.extend(row)
 
-    # pyautogui 
-    counter = []
-    for num in str_fin:
-        pg.press(num)
-        pg.hotkey('right')
-        counter.append(num)
-        if len(counter) % 9 == 0:
-            pg.hotkey('down')
-            for i in range(9):
-                pg.hotkey('left')
-          
+        return [str(num) for num in flatBoard]
+    
+    def automate(self) -> None:
+        """Automates the process of solving the Sudoku puzzle.
 
+        NOTE: Place your cursor on the top left corner of the online Sudoku puzzle board.
 
-# Sudoku solver
-def solve():
-    global board
-    for row in range(9):
-        for col in range(9):
-            if board[row][col] == 0:
-                for num in range(1, 10):
-                    if valid(row, col, num):
-                        board[row][col] = num
-                        solve()
-                        board[row][col] = 0
-                return
-    Print(board)
+        Args:
+            None
+        Returns:
+            None
+        """
+        flattenBoard = self.flatten(self.board)
+        counter = 0
+        
+        for num in flattenBoard:
+            pg.press(num)
+            pg.hotkey('right')
+            counter += 1
+            if counter % 9 == 0:
+                pg.hotkey('down')
+                for _ in range(9):
+                    pg.hotkey('left')
 
-
-solve()
