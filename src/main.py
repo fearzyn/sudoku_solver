@@ -1,4 +1,4 @@
-from solver import Solver
+from solver.solver import Solver
 import time
 
 board = []
@@ -9,7 +9,7 @@ for num in range(1, 10):
         temp.append(int(num))
     board.append(temp)
 
+sol = Solver()
+solved = sol.solve(board)
 time.sleep(3)
-
-sol = Solver(board)
-sol.solve()
+sol.automate(solved)
