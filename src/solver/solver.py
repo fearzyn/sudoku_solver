@@ -23,6 +23,9 @@ class Solver:
         Returns:
             bool
         """
+        if row >= 9 or col >= 9 or row < 0 or col < 0:
+            return False
+        
         for i in range(9):
             if board[row][i] == number:
                 return False
@@ -43,7 +46,7 @@ class Solver:
         Args:
             board (list[list[int]]): The Sudoku puzzle board.
         Returns:
-            list[list[int]]
+            list[list[int]] or bool
         """
         for row in range(9):
             for col in range(9):
